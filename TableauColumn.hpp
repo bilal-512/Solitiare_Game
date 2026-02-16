@@ -22,8 +22,8 @@ public:
     bool empty() const;
     int size() const;
 
-    bool hasCompleteSequence();  // K → A same suit
-    void removeCompleteSequence();
+    bool hasCompleteSequence();  
+    std::vector<Card> removeCompleteSequence();
 
     void draw() const;
 };
