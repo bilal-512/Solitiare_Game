@@ -18,10 +18,10 @@ Deck::Deck(int suitMode)
         {
             suits = {Suit::Spades, Suit::Hearts, Suit::Diamonds, Suit::Clubs};
         }
-    int deckCount = 104 / (suits.size() * 13);
+    int deckCount = 104 / (suits.size() * 13); // deck count is depenent on the suit mode
     for (int d = 0; d < deckCount; d++)
     {
-        for (Suit s: suits)
+        for (Suit s: suits) // assing the rank from o to 12 to the suits of each type
         {
             for (int rank = 0; rank < 13; rank++)
             {
@@ -30,7 +30,7 @@ Deck::Deck(int suitMode)
         }
     }
 }
-void Deck::shuffleCards()
+void Deck::shuffleCards() // shuffle the cards by seeding random device
 {
     std::random_device rd;
     std::mt19937 g(rd());
