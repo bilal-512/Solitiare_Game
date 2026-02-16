@@ -1,17 +1,19 @@
 #include "TableauColumn.hpp"
 #include <iostream>
-#include<vector>
+#include <vector>
 #include "Card.hpp"
+#include <string>
+#include "raylib.h"
 
-void TableauColumn::addCard(const Card& card)
+void TableauColumn::addCard(const Card &card)
 {
     cards.push_back(card);
 }
-void TableauColumn::addCards(const std::vector<Card>& newCards)
+void TableauColumn::addCards(const std::vector<Card> &newCards)
 {
-   cards.insert(cards.end(), newCards.begin(), newCards.end());
+    cards.insert(cards.end(), newCards.begin(), newCards.end());
 }
-bool TableauColumn::canPlaceCard(const Card& card) const
+bool TableauColumn::canPlaceCard(const Card &card) const
 {
     return (cards.back().getRank() - 1 == card.getRank());
 }
@@ -62,29 +64,32 @@ int TableauColumn::size() const
     return cards.size();
 }
 
-bool TableauColumn::hasCompleteSequence() 
+bool TableauColumn::hasCompleteSequence()
 {
-    
     if (cards.size() < 13)
         return false;
 
-    int start = cards.size() - 13;
+    int start = (int)cards.size() - 13;
 
-    for (int i = start; i < cards.size() - 1; i++)
+    for (int i = start; i < (int)cards.size() - 1; i++)
     {
         if (!cards[i].isFaceUp() || !cards[i + 1].isFaceUp())
             return false;
 
         if (cards[i].getRank() != cards[i + 1].getRank() + 1)
             return false;
-    if (cards[start].getRank() != 13) 
+
+        if (cards[i].getSuit() != cards[i + 1].getSuit())
+            return false;
+    }
+
+    if (cards[start].getRank() != 13)
         return false;
 
-    if (cards.back().getRank() != 1)  
+    if (cards.back().getRank() != 1)
         return false;
 
     return true;
-}
 }
 std::vector<Card> TableauColumn::removeCompleteSequence()
 {
@@ -103,4 +108,47 @@ std::vector<Card> TableauColumn::removeCompleteSequence()
         cards.back().setFaceUp(true);
 
     return completed;
+}
+
+void TableauColumn::setPosition(int x, int y)
+{
+    posX = x;
+    posY = y;
+}
+
+void TableauColumn::draw() const
+{
+    // Simple Raylib rendering of the column. If Raylib isn't initialized,
+    // this will have no effect; a console fallback prints card text instead.
+    const int cardWidth = 60;
+    const int cardHeight = 90;
+    const int OFFSET_Y = 20;
+
+    // If a Raylib window is ready, draw graphical cards.
+    if (IsWindowReady())
+    {
+        for (int i = 0; i < (int)cards.size(); ++i)
+        {
+            int cx = posX;
+            int cy = posY + i * OFFSET_Y;
+
+            if (cards[i].isFaceUp())
+            {
+                DrawRectangle(cx, cy, cardWidth, cardHeight, RAYWHITE);
+                DrawRectangleLines(cx, cy, cardWidth, cardHeight, BLACK);
+                std::string text = cards[i].getRankString() + " of " + cards[i].getSuitString();
+                DrawText(text.c_str(), cx + 6, cy + 6, 10, BLACK);
+            }
+            else
+            {
+                DrawRectangle(cx, cy, cardWidth, cardHeight, DARKGRAY);
+                DrawRectangleLines(cx, cy, cardWidth, cardHeight, BLACK);
+            }
+        }
+    }
+    else // Console fallback
+    {
+        for (const auto &c : cards)
+            c.draw();
+    }
 }

@@ -8,6 +8,8 @@ class TableauColumn
 {
 private:
     std::vector<Card> cards;
+    int posX = 0;
+    int posY = 0;
 
 public:
     void addCard(const Card& card);
@@ -26,6 +28,7 @@ public:
     std::vector<Card> removeCompleteSequence();
 
     void draw() const;
+    void setPosition(int x, int y);
 };
 
 #endif
