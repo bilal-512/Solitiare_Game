@@ -98,9 +98,7 @@ std::vector<Card> TableauColumn::removeCompleteSequence()
     if (!hasCompleteSequence())
         return completed;
 
-    completed.insert(completed.end(),
-                     cards.end() - 13,
-                     cards.end());
+    completed.insert(completed.end(), cards.end() - 13, cards.end());
 
     cards.erase(cards.end() - 13, cards.end());
 
@@ -110,45 +108,10 @@ std::vector<Card> TableauColumn::removeCompleteSequence()
     return completed;
 }
 
-void TableauColumn::setPosition(int x, int y)
-{
-    posX = x;
-    posY = y;
-}
-
 void TableauColumn::draw() const
 {
-    // Simple Raylib rendering of the column. If Raylib isn't initialized,
-    // this will have no effect; a console fallback prints card text instead.
-    const int cardWidth = 60;
-    const int cardHeight = 90;
-    const int OFFSET_Y = 20;
-
-    // If a Raylib window is ready, draw graphical cards.
-    if (IsWindowReady())
-    {
-        for (int i = 0; i < (int)cards.size(); ++i)
-        {
-            int cx = posX;
-            int cy = posY + i * OFFSET_Y;
-
-            if (cards[i].isFaceUp())
-            {
-                DrawRectangle(cx, cy, cardWidth, cardHeight, RAYWHITE);
-                DrawRectangleLines(cx, cy, cardWidth, cardHeight, BLACK);
-                std::string text = cards[i].getRankString() + " of " + cards[i].getSuitString();
-                DrawText(text.c_str(), cx + 6, cy + 6, 10, BLACK);
-            }
-            else
-            {
-                DrawRectangle(cx, cy, cardWidth, cardHeight, DARKGRAY);
-                DrawRectangleLines(cx, cy, cardWidth, cardHeight, BLACK);
-            }
-        }
-    }
-    else // Console fallback
-    {
-        for (const auto &c : cards)
-            c.draw();
-    }
+  for (int i = 0; i < cards.size(); i++ )
+  {
+    cards[i].draw();
+  }
 }
